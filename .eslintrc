@@ -1,0 +1,21 @@
+{
+    "root": true,
+    "extends": "@react-native-community",
+    "plugins": ["import"],
+    "rules": {
+        "jest/jest": "off",
+        "prettier/prettier": ["error", {
+            "singleQuote": true,
+            "tabWidth": 4,
+            "trailingComma": "es5",
+            "printWidth": 120
+        }],
+        "import/order": ["error", {
+            "groups": ["builtin", "external", "parent", "sibling", "index"],
+            "newlines-between": "always"
+        }],
+        "indent": ["error", 4, { "SwitchCase": 1 }],
+        "object-curly-spacing": ["error", "always"],
+        "react-native/no-inline-styles": "off"
+    }
+}
