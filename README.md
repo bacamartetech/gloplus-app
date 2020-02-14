@@ -1,2 +1,2 @@
-# goplus-app
-Go+ App
+# gloplus-app
+Glo+ App
