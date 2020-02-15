@@ -3,12 +3,14 @@ import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
+import storage from './services/storage';
+import AppContext from './contexts/AppContext';
 import Loading from './pages/Loading';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import storage from './services/storage';
-import Home from './pages/Home';
-import AppContext from './contexts/AppContext';
+import EmissoraList from './pages/EmissoraList';
+import EmissoraDetail from './pages/EmissoraDetail';
+import EpisodioList from './pages/EpisodioList';
 
 const Stack = createStackNavigator();
 
@@ -43,7 +45,9 @@ const App = () => {
                     <Stack.Navigator headerMode={'none'} screenOptions={{ animationEnabled: false }}>
                         {appState.user ? (
                             <>
-                                <Stack.Screen name="Home" component={Home} />
+                                <Stack.Screen name="EmissoraList" component={EmissoraList} />
+                                <Stack.Screen name="EmissoraDetail" component={EmissoraDetail} />
+                                <Stack.Screen name="EpisodioList" component={EpisodioList} />
                             </>
                         ) : (
                             <>
