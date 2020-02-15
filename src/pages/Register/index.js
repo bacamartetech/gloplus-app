@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Text, View, StyleSheet, TextInput, TouchableOpacity, ToastAndroid, Picker } from 'react-native';
+import { Text, View, StyleSheet, TextInput, TouchableOpacity, ToastAndroid } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -8,13 +8,8 @@ import AppContext from '../../contexts/AppContext';
 import storage from '../../services/storage';
 
 const Register = ({ navigation }) => {
-    const [avatarOptions, setAvatarOptions] = useState([
-        { label: 'Faustão', value: 'faustao' },
-        { label: 'Carminha', value: 'carminha' },
-        { label: 'William Bonner', value: 'williambonner' },
-    ]);
-    const [registerData, setRegisterData] = useState({ name: null, email: null, password: null, avatar: null });
-    const { setAppState: updateAppState } = useContext(AppContext);
+    const [registerData, setRegisterData] = useState({ name: null, email: null, password: null });
+    const { updateAppState } = useContext(AppContext);
 
     async function handleSubmit() {
         // eslint-disable-next-line no-useless-escape
@@ -39,7 +34,7 @@ const Register = ({ navigation }) => {
         try {
             const response = await api.register(registerData);
 
-            setRegisterData({ name: null, email: null, password: null, avatar: null });
+            setRegisterData({ name: null, email: null, password: null });
             updateAppState({ user: response.data });
 
             await storage.saveUserData(response.data);
@@ -100,23 +95,6 @@ const Register = ({ navigation }) => {
                         value={registerData.password}
                         onChangeText={v => setRegisterData({ ...registerData, password: v })}
                     />
-                </View>
-
-                {/* avatar */}
-                <View style={styles.inputContainer}>
-                    <Icon name="face" size={28} style={styles.inputIcon} />
-                    <View style={styles.input}>
-                        <Picker
-                            selectedValue={registerData.avatar}
-                            onValueChange={v => setRegisterData({ ...registerData, avatar: v })}
-                            style={{ color: '#ffffff', marginLeft: -7, marginRight: -15 }}
-                        >
-                            <Picker.Item label="-- selecione --" value={null} />
-                            {avatarOptions.map((opt, index) => (
-                                <Picker.Item key={index.toString()} label={opt.label} value={opt.value} />
-                            ))}
-                        </Picker>
-                    </View>
                 </View>
 
                 <TouchableOpacity style={styles.submitButton} activeOpacity={0.7} onPress={handleSubmit}>
