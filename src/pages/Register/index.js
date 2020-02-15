@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Text, View, StyleSheet, TextInput, TouchableOpacity, ToastAndroid, Picker } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import api from '../../services/api';
+import AppContext from '../../contexts/AppContext';
 import storage from '../../services/storage';
 
 const Register = ({ navigation }) => {
@@ -13,6 +14,7 @@ const Register = ({ navigation }) => {
         { label: 'William Bonner', value: 'williambonner' },
     ]);
     const [registerData, setRegisterData] = useState({ name: null, email: null, password: null, avatar: null });
+    const { setAppState: updateAppState } = useContext(AppContext);
 
     async function handleSubmit() {
         // eslint-disable-next-line no-useless-escape
@@ -38,8 +40,9 @@ const Register = ({ navigation }) => {
             const response = await api.register(registerData);
 
             setRegisterData({ name: null, email: null, password: null, avatar: null });
-            storage.saveUserData(response.data);
-            navigation.navigate('Home');
+            updateAppState({ user: response.data });
+
+            await storage.saveUserData(response.data);
         } catch (error) {
             console.log(error);
             if (error.data && error.data.error) {

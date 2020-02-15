@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Text, View, StyleSheet, TextInput, TouchableOpacity, ToastAndroid } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import api from '../../services/api';
+import AppContext from '../../contexts/AppContext';
 import storage from '../../services/storage';
 
 const Login = ({ navigation }) => {
     const [loginData, setLoginData] = useState({ email: null, password: null });
+    const { updateAppState } = useContext(AppContext);
 
     async function handleSubmit() {
         // eslint-disable-next-line no-useless-escape
@@ -28,11 +30,10 @@ const Login = ({ navigation }) => {
         try {
             const response = await api.login(loginData);
 
-            await storage.saveUserData(response.data);
-
             setLoginData({ email: null, password: null });
-            storage.saveUserData(response.data);
-            navigation.navigate('Home');
+            updateAppState({ user: response.data });
+
+            await storage.saveUserData(response.data);
         } catch (error) {
             console.log(error);
             if (error.data && error.data.error) {
