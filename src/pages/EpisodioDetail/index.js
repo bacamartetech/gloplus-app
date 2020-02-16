@@ -13,7 +13,7 @@ function formatDate(date) {
     return `${day}/${month}/${year}`;
 }
 
-const EpisodeDetail = ({ route }) => {
+const EpisodeDetail = ({ navigation, route }) => {
     const { socket } = useContext(AppContext);
 
     const [episodeInfo, setEpisodeInfo] = useState(null);
@@ -26,7 +26,6 @@ const EpisodeDetail = ({ route }) => {
         socket.emit('join', { episodeId: route.params.id });
 
         socket.on('episodeInfo', data => {
-            console.log(data);
             setEpisodeInfo({ ...data, date: formatDate(data.date) });
         });
 
@@ -161,6 +160,13 @@ const EpisodeDetail = ({ route }) => {
                             </View>
                         </>
                     )}
+
+                    <TouchableOpacity
+                        style={{ backgroundColor: 'blue', color: 'white' }}
+                        onPress={() => navigation.navigate('EpisodioChat', { id: episodeInfo._id })}
+                    >
+                        <Text>Entrar no chat</Text>
+                    </TouchableOpacity>
                 </>
             )}
         </LinearGradient>

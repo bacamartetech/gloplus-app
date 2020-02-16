@@ -13,6 +13,7 @@ import EmissoraList from './pages/EmissoraList';
 import EmissoraDetail from './pages/EmissoraDetail';
 import EpisodioList from './pages/EpisodioList';
 import EpisodioDetail from './pages/EpisodioDetail';
+import EpisodioChat from './pages/EpisodioChat';
 
 const Stack = createStackNavigator();
 
@@ -68,6 +69,7 @@ const App = () => {
                                 <Stack.Screen name="EmissoraDetail" component={EmissoraDetail} />
                                 <Stack.Screen name="EpisodioList" component={EpisodioList} />
                                 <Stack.Screen name="EpisodioDetail" component={EpisodioDetail} />
+                                <Stack.Screen name="EpisodioChat" component={EpisodioChat} />
                             </>
                         ) : (
                             <>
