@@ -11,7 +11,6 @@ const EmissoraList = ({ navigation }) => {
     useEffect(() => {
         api.fetchEmissoras()
             .then(response => {
-                console.log(response.data);
                 setEmissoras(response.data);
             })
             .catch(console.log);

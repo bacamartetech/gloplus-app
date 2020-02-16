@@ -11,7 +11,6 @@ const EmissoraDetail = ({ navigation, route }) => {
     useEffect(() => {
         api.fetchEmissora(route.params.id)
             .then(response => {
-                console.log(response.data);
                 setEmissora(response.data);
             })
             .catch(console.log);

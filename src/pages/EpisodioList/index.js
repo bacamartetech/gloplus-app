@@ -5,13 +5,12 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import api from '../../services/api';
 
-const EpisodioList = ({ route }) => {
+const EpisodioList = ({ route, navigation }) => {
     const [episodios, setEpisodios] = useState([]);
 
     useEffect(() => {
         api.fetchEpisodios(route.params.idEmissora, route.params.date)
             .then(response => {
-                console.log(response.data);
                 setEpisodios(response.data);
             })
             .catch(console.log);
@@ -47,9 +46,9 @@ const EpisodioList = ({ route }) => {
                                 <Text>Hora: {item.time}</Text>
                             </View>
 
-                            {/* <TouchableOpacity onPress={() => navigation.navigate('EmissoraDetail', { id: item._id })}>
-                            <Icon name="arrow-right" size={24} />
-                        </TouchableOpacity> */}
+                            <TouchableOpacity onPress={() => navigation.navigate('EpisodioDetail', { id: item._id })}>
+                                <Icon name="arrow-right" size={24} />
+                            </TouchableOpacity>
                         </View>
                         <Text style={{ fontSize: 12, marginTop: 15 }}>{item.description}</Text>
                     </View>
