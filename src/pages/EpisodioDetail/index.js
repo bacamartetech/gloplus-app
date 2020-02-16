@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect, useContext } from 'react';
 import { StyleSheet, Linking, Text, View, Image, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Share from 'react-native-share';
 
 import AppContext from '../../contexts/AppContext';
 
@@ -26,6 +27,7 @@ const EpisodeDetail = ({ navigation, route }) => {
         socket.emit('join', { episodeId: route.params.id });
 
         socket.on('episodeInfo', data => {
+            console.log(data);
             setEpisodeInfo({ ...data, date: formatDate(data.date) });
         });
 
@@ -67,6 +69,18 @@ const EpisodeDetail = ({ navigation, route }) => {
         },
         [episodeInfo, myInteraction, socket]
     );
+
+    const handleShare = useCallback(async () => {
+        try {
+            await Share.open({
+                title: 'Glo+',
+                message: `Venha assistir ${episodeInfo.title} no Glo+ às ${episodeInfo.date} ${episodeInfo.time}`,
+                url: `http://goplus.com.br/${episodeInfo._id}`,
+            });
+        } catch {
+            console.log('No shared!');
+        }
+    }, [episodeInfo]);
 
     return (
         <LinearGradient colors={['#9bcbc9', '#616161']} style={styles.container}>
@@ -156,6 +170,11 @@ const EpisodeDetail = ({ navigation, route }) => {
                                 <TouchableOpacity onPress={toggleLike}>
                                     <Icon name="earth" size={24} />
                                     {myInteraction.like ? <Text>DeGlobar!</Text> : <Text>Globar!</Text>}
+                                </TouchableOpacity>
+
+                                <TouchableOpacity onPress={handleShare}>
+                                    <Icon name="share" size={24} />
+                                    <Text>Compartilhar</Text>
                                 </TouchableOpacity>
                             </View>
                         </>
