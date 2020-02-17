@@ -1,30 +1,61 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, Picker, FlatList, TouchableOpacity, Image } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import api from '../../services/api';
 
+function formatDate(date) {
+    const year = date.toString().substring(0, 4);
+    const month = date.toString().substring(4, 6);
+    const day = date.toString().substring(6, 8);
+
+    return `${day}/${month}/${year}`;
+}
+
 const EpisodioList = ({ route, navigation }) => {
+    const [emissora, setEmissora] = useState({});
     const [episodios, setEpisodios] = useState([]);
+    const [selectedDate, setSelectedDate] = useState(0);
 
     useEffect(() => {
-        api.fetchEpisodios(route.params.idEmissora, route.params.date)
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = ('0' + (today.getMonth() + 1)).slice(-2);
+        const date = today.getDate();
+        setSelectedDate(Number(`${year}${month}${date}`));
+
+        api.fetchEmissora(route.params.idEmissora)
             .then(response => {
-                setEpisodios(response.data);
+                setEmissora({
+                    ...response.data,
+                    dates: response.data.dates.map(d => ({ date: d, label: formatDate(d) })),
+                });
             })
             .catch(console.log);
-    }, [route.params.date, route.params.idEmissora]);
+    }, [route.params.idEmissora]);
+
+    useEffect(() => {
+        api.fetchEpisodios(route.params.idEmissora, selectedDate).then(response => setEpisodios(response.data));
+    }, [route.params.idEmissora, selectedDate]);
 
     return (
         <LinearGradient colors={['#9bcbc9', '#616161']} style={styles.container}>
-            {/* date: 20200216
-            logo: "https://s3.glbimg.com/v1/AUTH_947d0a0390ad47fbba7a4b93423e1004/Logo/533.jpg"
-            time: "02:07"
-            title: "Flash Big Brother Brasil"
-            thumb: "https://s3.glbimg.com/v1/AUTH_947d0a0390ad47fbba7a4b93423e1004/Imagem/596.jpg"
-            description: "As últimas notícias do que acontece na casa mais vigiada do Brasil." */}
-            <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#ffffff' }}>Programação</Text>
+            {emissora && (
+                <>
+                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#ffffff' }}>{emissora.title}</Text>
+                    {emissora.dates && (
+                        <Picker
+                            selectedValue={selectedDate}
+                            onValueChange={(itemValue, itemIndex) => setSelectedDate(itemValue)}
+                        >
+                            {emissora.dates.map(d => (
+                                <Picker.Item label={d.label} value={d.date} />
+                            ))}
+                        </Picker>
+                    )}
+                </>
+            )}
             <FlatList
                 data={episodios}
                 keyExtractor={item => item._id}

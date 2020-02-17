@@ -13,7 +13,7 @@ const EmissoraList = ({ navigation }) => {
             .then(profile => {
                 const schedule = profile.data.schedule;
                 if (schedule) {
-                    navigation.navigate('EmissoraDetail', { id: schedule._id });
+                    navigation.navigate('EpisodioList', { idEmissora: schedule._id });
                 }
                 api.fetchEmissoras()
                     .then(response => {
@@ -27,7 +27,7 @@ const EmissoraList = ({ navigation }) => {
     const handleSelectEmissora = useCallback(
         item => {
             api.updateUserSchedule(item._id).then(() => {
-                navigation.navigate('EmissoraDetail', { id: item._id });
+                navigation.navigate('EpisodioList', { idEmissora: item._id });
             });
         },
         [navigation]

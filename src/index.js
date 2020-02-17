@@ -66,7 +66,6 @@ const App = () => {
                         {appState.user ? (
                             <>
                                 <Stack.Screen name="EmissoraList" component={EmissoraList} />
-                                <Stack.Screen name="EmissoraDetail" component={EmissoraDetail} />
                                 <Stack.Screen name="EpisodioList" component={EpisodioList} />
                                 <Stack.Screen name="EpisodioDetail" component={EpisodioDetail} />
                                 <Stack.Screen name="EpisodioChat" component={EpisodioChat} />
