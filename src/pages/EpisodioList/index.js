@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { StyleSheet, Text, View, Picker, FlatList, TouchableOpacity, Image } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -13,17 +13,21 @@ function formatDate(date) {
     return `${day}/${month}/${year}`;
 }
 
+function getTodayValue() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = ('0' + (today.getMonth() + 1)).slice(-2);
+    const date = today.getDate();
+    return Number(`${year}${month}${date}`);
+}
+
 const EpisodioList = ({ route, navigation }) => {
     const [emissora, setEmissora] = useState({});
     const [episodios, setEpisodios] = useState([]);
     const [selectedDate, setSelectedDate] = useState(0);
 
     useEffect(() => {
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = ('0' + (today.getMonth() + 1)).slice(-2);
-        const date = today.getDate();
-        setSelectedDate(Number(`${year}${month}${date}`));
+        setSelectedDate(getTodayValue);
 
         api.fetchEmissora(route.params.idEmissora)
             .then(response => {
@@ -36,8 +40,25 @@ const EpisodioList = ({ route, navigation }) => {
     }, [route.params.idEmissora]);
 
     useEffect(() => {
-        api.fetchEpisodios(route.params.idEmissora, selectedDate).then(response => setEpisodios(response.data));
+        api.fetchEpisodios(route.params.idEmissora, selectedDate).then(response =>
+            setEpisodios(
+                response.data.map(e => ({
+                    ...e,
+                    totalMinutes: Number(e.time.slice(0, 2)) * 60 + Number(e.time.slice(3, 5)),
+                }))
+            )
+        );
     }, [route.params.idEmissora, selectedDate]);
+
+    const currentEpisode = useMemo(() => {
+        if (selectedDate !== getTodayValue()) {
+            return null;
+        }
+        const today = new Date();
+        const totalMinutes = today.getHours() * 60 + today.getMinutes();
+        const pastEpisodes = episodios.filter(e => e.totalMinutes <= totalMinutes);
+        return pastEpisodes[pastEpisodes.length - 1];
+    }, [episodios, selectedDate]);
 
     return (
         <LinearGradient colors={['#9bcbc9', '#616161']} style={styles.container}>
@@ -56,6 +77,36 @@ const EpisodioList = ({ route, navigation }) => {
                     )}
                 </>
             )}
+            {currentEpisode && (
+                <>
+                    <Text>Passando agora:</Text>
+                    <View style={{ backgroundColor: '#ffffff', padding: 15, borderRadius: 4, marginBottom: 15 }}>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                            }}
+                        >
+                            <Image
+                                source={{ uri: currentEpisode.logo }}
+                                resizeMode={'contain'}
+                                style={{ height: 50, width: 50 }}
+                            />
+                            <View style={{ marginLeft: 10, justifyContent: 'space-between' }}>
+                                <Text style={{ fontWeight: 'bold' }}>{currentEpisode.title}</Text>
+                                <Text>Hora: {currentEpisode.time}</Text>
+                            </View>
+
+                            <TouchableOpacity
+                                onPress={() => navigation.navigate('EpisodioDetail', { id: currentEpisode._id })}
+                            >
+                                <Icon name="arrow-right" size={24} />
+                            </TouchableOpacity>
+                        </View>
+                        <Text style={{ fontSize: 12, marginTop: 15 }}>{currentEpisode.description}</Text>
+                    </View>
+                </>
+            )}
+            <Text>Programação de Hoje</Text>
             <FlatList
                 data={episodios}
                 keyExtractor={item => item._id}
