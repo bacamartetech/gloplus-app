@@ -39,7 +39,7 @@ const EpisodioChat = ({ route }) => {
         // return () => {
         //     socket.emit('leave', { episodeId: route.params.id });
         // };
-    }, [route.params.id, socket]);
+    }, [chatHistory, route.params.id, socket]);
 
     const handleSendMessage = useCallback(() => {
         const message = messageDraft;

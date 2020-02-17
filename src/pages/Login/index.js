@@ -36,6 +36,7 @@ const Login = ({ navigation }) => {
             await storage.saveUserData(response.data);
         } catch (error) {
             console.log(error);
+
             if (error.data && error.data.error) {
                 ToastAndroid.show(error.data.error, 3000);
             }

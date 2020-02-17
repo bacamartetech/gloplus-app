@@ -8,16 +8,22 @@ import api from '../../services/api';
 const EmissoraList = ({ navigation }) => {
     const [emissoras, setEmissoras] = useState([]);
 
+    navigation.setOptions({
+        title: 'Selecione uma emissora',
+    });
+
     useEffect(() => {
         api.fetchUserProfile()
-            .then(profile => {
-                const schedule = profile.data.schedule;
+            .then(responseProfile => {
+                const schedule = responseProfile.data.schedule;
+
                 if (schedule) {
                     navigation.navigate('EpisodioList', { idEmissora: schedule._id });
                 }
+
                 api.fetchEmissoras()
-                    .then(response => {
-                        setEmissoras(response.data);
+                    .then(responseSchedule => {
+                        setEmissoras(responseSchedule.data);
                     })
                     .catch(console.log);
             })
@@ -35,11 +41,11 @@ const EmissoraList = ({ navigation }) => {
 
     return (
         <LinearGradient colors={['#9bcbc9', '#616161']} style={styles.container}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#ffffff' }}>Selecione a emissora</Text>
+            {/* <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#ffffff' }}>Selecione a emissora</Text> */}
             <FlatList
                 data={emissoras}
                 keyExtractor={item => item._id}
-                style={{ marginTop: 15, marginBottom: -15 }}
+                style={{ marginBottom: -15 }}
                 renderItem={({ item }) => (
                     <View
                         style={{
@@ -67,7 +73,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 15,
-        paddingTop: 40,
+        paddingTop: 80,
     },
 
     header: {

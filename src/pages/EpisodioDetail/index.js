@@ -23,6 +23,10 @@ const EpisodeDetail = ({ navigation, route }) => {
     const [score, setScore] = useState(0);
     const [likes, setLikes] = useState(0);
 
+    navigation.setOptions({
+        title: episodeInfo ? episodeInfo.title : '',
+    });
+
     useEffect(() => {
         socket.emit('join', { episodeId: route.params.id });
 
@@ -75,7 +79,7 @@ const EpisodeDetail = ({ navigation, route }) => {
             await Share.open({
                 title: 'Glo+',
                 message: `Venha assistir ${episodeInfo.title} no Glo+ às ${episodeInfo.date} ${episodeInfo.time}`,
-                url: `http://goplus.com.br/${episodeInfo._id}`,
+                url: `http://gloplus.com.br/${episodeInfo._id}`,
             });
         } catch {
             console.log('No shared!');
@@ -196,7 +200,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 15,
-        paddingTop: 40,
+        paddingTop: 80,
     },
 
     aliveStar: {

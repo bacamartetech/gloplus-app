@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar, YellowBox } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import socketio from 'socket.io-client';
@@ -15,6 +15,8 @@ import EpisodioDetail from './pages/EpisodioDetail';
 import EpisodioChat from './pages/EpisodioChat';
 
 const Stack = createStackNavigator();
+
+YellowBox.ignoreWarnings(['Remote debugger', 'Unrecognized WebSocket connection option(s)']);
 
 const App = () => {
     const [socket, setSocket] = useState(null);
@@ -61,7 +63,13 @@ const App = () => {
 
             <AppContext.Provider value={{ appState, updateAppState, socket }}>
                 <NavigationContainer>
-                    <Stack.Navigator headerMode={'none'} screenOptions={{ animationEnabled: false }}>
+                    <Stack.Navigator
+                        screenOptions={{
+                            animationEnabled: false,
+                            headerTransparent: true,
+                            headerTintColor: '#ffffff',
+                        }}
+                    >
                         {appState.user ? (
                             <>
                                 <Stack.Screen name="EmissoraList" component={EmissoraList} />

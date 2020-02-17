@@ -33,11 +33,13 @@ api.interceptors.response.use(
 export default {
     register({ name, email, password }) {
         console.log('registering...', { name, email, password });
+
         return api.post('/register', { name, email, password });
     },
 
     login({ email, password }) {
         console.log('authenticating...', { email, password });
+
         return api.post('/session', { email, password });
     },
 
