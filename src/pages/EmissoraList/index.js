@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Text, View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -9,12 +9,29 @@ const EmissoraList = ({ navigation }) => {
     const [emissoras, setEmissoras] = useState([]);
 
     useEffect(() => {
-        api.fetchEmissoras()
-            .then(response => {
-                setEmissoras(response.data);
+        api.fetchUserProfile()
+            .then(profile => {
+                const schedule = profile.data.schedule;
+                if (schedule) {
+                    navigation.navigate('EmissoraDetail', { id: schedule._id });
+                }
+                api.fetchEmissoras()
+                    .then(response => {
+                        setEmissoras(response.data);
+                    })
+                    .catch(console.log);
             })
             .catch(console.log);
-    }, []);
+    }, [navigation]);
+
+    const handleSelectEmissora = useCallback(
+        item => {
+            api.updateUserSchedule(item._id).then(() => {
+                navigation.navigate('EmissoraDetail', { id: item._id });
+            });
+        },
+        [navigation]
+    );
 
     return (
         <LinearGradient colors={['#9bcbc9', '#616161']} style={styles.container}>
@@ -36,7 +53,7 @@ const EmissoraList = ({ navigation }) => {
                         }}
                     >
                         <Text>{item.title}</Text>
-                        <TouchableOpacity onPress={() => navigation.navigate('EmissoraDetail', { id: item._id })}>
+                        <TouchableOpacity onPress={() => handleSelectEmissora(item)}>
                             <Icon name="arrow-right" size={24} />
                         </TouchableOpacity>
                     </View>

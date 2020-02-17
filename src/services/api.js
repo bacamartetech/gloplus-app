@@ -56,4 +56,16 @@ export default {
     fetchAvatars() {
         return api.get('/avatar');
     },
+
+    fetchUserProfile() {
+        return api.get('/myProfile');
+    },
+
+    updateUserProfile(data) {
+        return api.put('/myProfile', data);
+    },
+
+    updateUserSchedule(scheduleId) {
+        return api.put('/mySchedule', { scheduleId });
+    },
 };
