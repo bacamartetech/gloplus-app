@@ -10,7 +10,6 @@ import Loading from './pages/Loading';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import EmissoraList from './pages/EmissoraList';
-import EmissoraDetail from './pages/EmissoraDetail';
 import EpisodioList from './pages/EpisodioList';
 import EpisodioDetail from './pages/EpisodioDetail';
 import EpisodioChat from './pages/EpisodioChat';
