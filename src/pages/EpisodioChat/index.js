@@ -36,9 +36,9 @@ const EpisodioChat = ({ route }) => {
             setChatHistory(data.messages);
         });
 
-        return () => {
-            socket.emit('leave', { episodeId: route.params.id });
-        };
+        // return () => {
+        //     socket.emit('leave', { episodeId: route.params.id });
+        // };
     }, [route.params.id, socket]);
 
     const handleSendMessage = useCallback(() => {
