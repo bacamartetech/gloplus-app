@@ -7,6 +7,8 @@ import api from '../../services/api';
 
 import EpisodioCard from './EpisodioCard';
 
+let _currentEpisode;
+
 function formatDate(date) {
     const year = date.toString().substring(0, 4);
     const month = date.toString().substring(4, 6);
@@ -20,6 +22,7 @@ function getTodayValue() {
     const year = today.getFullYear();
     const month = ('0' + (today.getMonth() + 1)).slice(-2);
     const date = today.getDate();
+
     return Number(`${year}${month}${date}`);
 }
 
@@ -54,15 +57,15 @@ const EpisodioList = ({ route, navigation }) => {
                 setSelectedDate(date);
             }
 
-            api.fetchEpisodios(route.params.idEmissora, selectedDate)
-                .then(response =>
+            api.fetchEpisodios(route.params.idEmissora, date || selectedDate)
+                .then(response => {
                     setEpisodios(
                         response.data.map(e => ({
                             ...e,
                             totalMinutes: Number(e.time.slice(0, 2)) * 60 + Number(e.time.slice(3, 5)),
                         }))
-                    )
-                )
+                    );
+                })
                 .catch(console.log);
         },
         [route.params.idEmissora, selectedDate]
@@ -70,14 +73,16 @@ const EpisodioList = ({ route, navigation }) => {
 
     const currentEpisode = useMemo(() => {
         if (selectedDate !== getTodayValue()) {
-            return null;
+            return _currentEpisode;
         }
 
         const today = new Date();
         const totalMinutes = today.getHours() * 60 + today.getMinutes();
         const pastEpisodes = episodios.filter(e => e.totalMinutes <= totalMinutes);
 
-        return pastEpisodes[pastEpisodes.length - 1];
+        _currentEpisode = pastEpisodes[pastEpisodes.length - 1];
+
+        return _currentEpisode;
     }, [episodios, selectedDate]);
 
     return (
@@ -136,7 +141,7 @@ const EpisodioList = ({ route, navigation }) => {
 
             <View>
                 <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#ffffff', marginBottom: 15 }}>
-                    Programação
+                    Programação {selectedDate === getTodayValue() ? 'de hoje' : `do dia ${formatDate(selectedDate)}`}
                 </Text>
 
                 <FlatList
@@ -159,59 +164,6 @@ const EpisodioList = ({ route, navigation }) => {
                     )}
                 />
             </View>
-
-            {/* {emissora && (
-                <>
-                    <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#ffffff' }}>{emissora.title}</Text>
-                    {emissora.dates && (
-                        <Picker selectedValue={selectedDate} onValueChange={date => fetchEpisodios(date)}>
-                            {emissora.dates.map(d => (
-                                <Picker.Item key={d.date} label={d.label} value={d.date} />
-                            ))}
-                        </Picker>
-                    )}
-                </>
-            )}
-            {currentEpisode && (
-                <>
-                    <Text>Passando agora:</Text>
-
-                    <View
-                        style={{
-                            backgroundColor: '#ffffff',
-                            padding: 15,
-                            borderRadius: 4,
-                            marginBottom: 15,
-                            marginTop: 15,
-                        }}
-                    >
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                            }}
-                        >
-                            <Image
-                                source={{ uri: currentEpisode.logo }}
-                                resizeMode={'contain'}
-                                style={{ height: 50, width: 50 }}
-                            />
-                            <View style={{ marginLeft: 10, justifyContent: 'space-between' }}>
-                                <Text style={{ fontWeight: 'bold' }}>{currentEpisode.title}</Text>
-                                <Text>Hora: {currentEpisode.time}</Text>
-                            </View>
-
-                            <TouchableOpacity
-                                style={{ alignSelf: 'flex-end' }}
-                                onPress={() => navigation.navigate('EpisodioDetail', { id: currentEpisode._id })}
-                            >
-                                <Icon name="arrow-right" size={24} />
-                            </TouchableOpacity>
-                        </View>
-                        <Text style={{ fontSize: 12, marginTop: 15 }}>{currentEpisode.description}</Text>
-                    </View>
-                </>
-            )}
-            /> */}
         </LinearGradient>
     );
 };

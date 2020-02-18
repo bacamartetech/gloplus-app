@@ -47,16 +47,39 @@ const EpisodioChat = ({ navigation, route }) => {
 
     const handleSendMessage = useCallback(() => {
         const message = messageDraft;
+
         socket.emit('chatMessage', {
             episodeId: route.params.id,
             message,
         });
+
         setMessageDraft('');
     }, [messageDraft, route.params.id, socket]);
 
     return (
         <LinearGradient colors={['#9bcbc9', '#616161']} style={styles.container}>
-            {episodeInfo && (
+            <FlatList
+                data={chatHistory}
+                keyExtractor={item => item._id}
+                style={{ marginTop: 15, marginBottom: -15 }}
+                renderItem={({ item }) => (
+                    <View style={{ flexDirection: 'row' }}>
+                        {/* <Text>{item.date}</Text> */}
+                        {/* <Text>{item.user.name}</Text> */}
+                        <Image style={{ width: 40, height: 40 }} source={{ uri: item.user.avatar.url }} />
+                        {/* <Text>{item.message}</Text> */}
+                    </View>
+                )}
+            />
+
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <TextInput
+                    placeholder="Digite sua mensagem"
+                    style={{ flex: 1, backgroundColor: '#ffffff', borderRadius: 4, padding: 15 }}
+                />
+                <Icon name="send" size={24} />
+            </View>
+            {/* {episodeInfo && (
                 <>
                     <Icon name="account" />
                     <Text>{userCount}</Text>
@@ -88,7 +111,7 @@ const EpisodioChat = ({ navigation, route }) => {
                         )}
                     />
                 </>
-            )}
+            )} */}
         </LinearGradient>
     );
 };
