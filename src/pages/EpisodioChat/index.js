@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useContext, useRef } from 'react';
 import { StyleSheet, FlatList, TextInput, TouchableOpacity, Text, View, Image } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -17,6 +17,7 @@ function formatDate(date) {
 
 const EpisodioChat = ({ navigation, route }) => {
     const { socket } = useContext(AppContext);
+    const listRef = useRef();
 
     const [episodeInfo, setEpisodeInfo] = useState(null);
     const [userCount, setUserCount] = useState(0);
@@ -41,11 +42,7 @@ const EpisodioChat = ({ navigation, route }) => {
         socket.on('chatHistory', data => {
             setChatHistory(data.messages);
         });
-
-        // return () => {
-        //     socket.emit('leave', { episodeId: route.params.id });
-        // };
-    }, [chatHistory, route.params.id, socket]);
+    }, [route.params.id, socket]);
 
     const handleSendMessage = useCallback(() => {
         socket.emit('chatMessage', {
@@ -59,10 +56,13 @@ const EpisodioChat = ({ navigation, route }) => {
     return (
         <LinearGradient colors={['#9bcbc9', '#616161']} style={styles.container}>
             <FlatList
+                ref={listRef}
                 data={chatHistory}
                 keyExtractor={item => item._id}
                 style={{ marginBottom: 15 }}
                 contentContainerStyle={{ marginBottom: -15 }}
+                onContentSizeChange={() => listRef.current.scrollToEnd({ animated: true })}
+                onLayout={() => listRef.current.scrollToEnd({ animated: true })}
                 renderItem={({ item }) => (
                     <View style={{ marginBottom: 15 }}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>

@@ -46,10 +46,6 @@ const EpisodeDetail = ({ navigation, route }) => {
             setScore(data.score);
             setLikes(data.likes);
         });
-
-        // return () => {
-        //     socket.emit('leave', { episodeId: route.params.id });
-        // };
     }, [route.params.id, socket]);
 
     const toggleLike = useCallback(() => {
