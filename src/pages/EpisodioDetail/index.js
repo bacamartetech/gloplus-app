@@ -77,9 +77,9 @@ const EpisodeDetail = ({ navigation, route }) => {
     const handleShare = useCallback(async () => {
         try {
             await Share.open({
-                title: 'Glo+',
-                message: `Venha assistir ${episodeInfo.title} no Glo+ às ${episodeInfo.date} ${episodeInfo.time}`,
-                url: `http://gloplus.com.br/${episodeInfo._id}`,
+                title: 'GLO+',
+                message: `Venha assistir ${episodeInfo.title} no GLO+ às ${episodeInfo.date} ${episodeInfo.time}`,
+                url: `https://gloplus-api.glitch.me/share/${episodeInfo._id}`,
             });
         } catch {
             console.log('No shared!');
