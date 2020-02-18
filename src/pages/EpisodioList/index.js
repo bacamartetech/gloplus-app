@@ -114,7 +114,7 @@ const EpisodioList = ({ route, navigation }) => {
                 {currentEpisode && (
                     <>
                         <View style={{ flex: 1 }}>
-                            <View style={{ width: '100%', height: 220 }}>
+                            <View style={{ width: '100%', height: 200 }}>
                                 <EpisodioCard item={currentEpisode} />
                             </View>
                             <View
@@ -125,7 +125,7 @@ const EpisodioList = ({ route, navigation }) => {
                                     marginTop: 15,
                                 }}
                             >
-                                {/* <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <Icon name="account-outline" color="#ffffff" size={36} />
                                     <Text style={{ fontWeight: 'bold', color: '#ffffff' }}>
                                         {currentEpisode.userCount || 0} pessoa(s) assistindo
@@ -137,7 +137,7 @@ const EpisodioList = ({ route, navigation }) => {
                                     onPress={() => navigation.navigate('EpisodioDetail', { id: currentEpisode._id })}
                                 >
                                     <Text style={{ fontWeight: 'bold', color: '#ffffff' }}>Ver detalhes</Text>
-                                </TouchableOpacity> */}
+                                </TouchableOpacity>
                             </View>
                         </View>
                     </>
@@ -158,7 +158,7 @@ const EpisodioList = ({ route, navigation }) => {
                         <View
                             style={{
                                 width: (Dimensions.get('screen').width / 5) * 4,
-                                height: 220,
+                                height: 200,
                                 marginHorizontal: 7.5,
                             }}
                         >

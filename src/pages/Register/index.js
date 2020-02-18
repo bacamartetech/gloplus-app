@@ -11,6 +11,10 @@ const Register = ({ navigation }) => {
     const [registerData, setRegisterData] = useState({ name: null, email: null, password: null });
     const { updateAppState } = useContext(AppContext);
 
+    navigation.setOptions({
+        headerShown: false,
+    });
+
     async function handleSubmit() {
         // eslint-disable-next-line no-useless-escape
         const reEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
