@@ -97,9 +97,14 @@ const EpisodioChat = ({ navigation, route }) => {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <TextInput
                     placeholder="Digite sua mensagem"
+                    value={messageDraft}
+                    onChangeText={setMessageDraft}
                     style={{ flex: 1, backgroundColor: '#ffffff', borderRadius: 4, padding: 15, paddingRight: 55 }}
                 />
-                <TouchableOpacity style={{ position: 'absolute', right: 15 }} onPress={handleSendMessage}>
+                <TouchableOpacity
+                    style={{ position: 'absolute', right: 0, zIndex: 2, padding: 15 }}
+                    onPress={handleSendMessage}
+                >
                     <Icon name="send" size={24} />
                 </TouchableOpacity>
             </View>
