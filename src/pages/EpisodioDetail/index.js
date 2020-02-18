@@ -88,60 +88,129 @@ const EpisodeDetail = ({ navigation, route }) => {
 
     return (
         <LinearGradient colors={['#9bcbc9', '#616161']} style={styles.container}>
-            <ScrollView>
-                {episodeInfo && (
-                    <>
-                        <Image
-                            resizeMode={'cover'}
-                            style={{ width: '100%', height: 200 }}
-                            source={{ uri: episodeInfo.thumb }}
-                        />
+            {episodeInfo && (
+                <ScrollView style={{ flex: 1 }}>
+                    <Image
+                        resizeMode={'cover'}
+                        style={{ width: '100%', height: 200 }}
+                        source={{ uri: episodeInfo.thumb }}
+                    />
 
-                        <View style={{ backgroundColor: '#ffffff', borderRadius: 4, padding: 15, marginTop: 15 }}>
-                            <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 15 }}>Descrição</Text>
-                            <Text>{episodeInfo.description}</Text>
+                    <View style={{ flex: 1, backgroundColor: '#ffffff', borderRadius: 4, padding: 10, marginTop: 15 }}>
+                        <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 15 }}>Descrição</Text>
+                        <Text>{episodeInfo.description}</Text>
 
-                            {episodeInfo.link && (
-                                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15 }}>
-                                    <Icon name="earth" size={24} color="dodgerblue" style={{ marginRight: 5 }} />
-                                    <Text
-                                        style={{ color: 'dodgerblue' }}
-                                        onPress={() => Linking.openURL(episodeInfo.link)}
-                                    >
-                                        Visitar site
+                        {episodeInfo.link && (
+                            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15 }}>
+                                <Icon name="earth" size={24} color="dodgerblue" style={{ marginRight: 5 }} />
+                                <Text style={{ color: 'dodgerblue' }} onPress={() => Linking.openURL(episodeInfo.link)}>
+                                    Visitar site
+                                </Text>
+                            </View>
+                        )}
+                    </View>
+
+                    {episodeInfo.moreInfo.length > 0 && (
+                        <View
+                            style={{ flex: 1, backgroundColor: '#ffffff', borderRadius: 4, padding: 10, marginTop: 15 }}
+                        >
+                            <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 15 }}>
+                                Informações adicionais
+                            </Text>
+
+                            {episodeInfo.moreInfo.map(i => (
+                                <View key={i.key}>
+                                    <Text>
+                                        {i.key}: {i.value}
                                     </Text>
+                                </View>
+                            ))}
+                        </View>
+                    )}
+
+                    <View style={{ flexDirection: 'row', alignItems: 'stretch', justifyContent: 'space-between' }}>
+                        <View
+                            style={{
+                                flex: 1,
+                                backgroundColor: '#ffffff',
+                                borderRadius: 4,
+                                padding: 10,
+                                marginTop: 15,
+                                marginRight: 7.5,
+                            }}
+                        >
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    marginBottom: 15,
+                                }}
+                            >
+                                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Globadas</Text>
+                                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{likes || 0}</Text>
+                            </View>
+
+                            {myInteraction && (
+                                <View style={{ alignItems: 'center' }}>
+                                    <TouchableOpacity
+                                        style={{ flexDirection: 'row', alignItems: 'center' }}
+                                        onPress={toggleLike}
+                                    >
+                                        <Icon name="earth" size={24} color="#009DDB" style={{ marginRight: 5 }} />
+                                        <Text style={{ color: '#009DDB' }}>
+                                            {myInteraction.like ? 'Desglobar' : 'Globar'}
+                                        </Text>
+                                    </TouchableOpacity>
                                 </View>
                             )}
                         </View>
 
-                        {episodeInfo.moreInfo.length > 0 && (
-                            <View style={{ backgroundColor: '#ffffff', borderRadius: 4, padding: 15, marginTop: 15 }}>
-                                <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 15 }}>
-                                    Informações adicionais
-                                </Text>
-
-                                {episodeInfo.moreInfo.map(i => (
-                                    <View key={i.key}>
-                                        <Text>
-                                            {i.key}: {i.value}
-                                        </Text>
-                                    </View>
-                                ))}
-                            </View>
-                        )}
-
-                        <View style={{ flexDirection: 'row', alignItems: 'stretch', justifyContent: 'space-between' }}>
-                            <View
+                        <View
+                            style={{
+                                flex: 1,
+                                backgroundColor: '#ffffff',
+                                borderRadius: 4,
+                                padding: 10,
+                                marginTop: 15,
+                                marginLeft: 7.5,
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <TouchableOpacity
+                                onPress={handleShare}
                                 style={{
-                                    flex: 1,
-                                    backgroundColor: '#ffffff',
-                                    borderRadius: 4,
-                                    padding: 15,
-                                    marginTop: 15,
-                                    marginRight: 7.5,
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
                                 }}
                             >
-                                <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 15 }}>Globadas</Text>
+                                <Icon name="share" size={24} color="#009DDB" style={{ marginRight: 5 }} />
+                                <Text style={{ fontWeight: 'bold', color: '#009DDB' }}>Compartilhar</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+
+                    {myInteraction && (
+                        <>
+                            <View
+                                style={{
+                                    backgroundColor: '#ffffff',
+                                    borderRadius: 4,
+                                    padding: 10,
+                                    marginTop: 15,
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        marginBottom: 15,
+                                    }}
+                                >
+                                    <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Avaliação</Text>
+                                    <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Nota média: {score || '-'}</Text>
+                                </View>
                                 <View
                                     style={{
                                         flexDirection: 'row',
@@ -149,146 +218,68 @@ const EpisodeDetail = ({ navigation, route }) => {
                                         justifyContent: 'space-between',
                                     }}
                                 >
-                                    <Text>{likes || 0}</Text>
-                                    {myInteraction && (
-                                        <TouchableOpacity
-                                            style={{ flexDirection: 'row', alignItems: 'center' }}
-                                            onPress={toggleLike}
-                                        >
-                                            <Icon name="earth" size={24} />
-                                            {myInteraction.like ? <Text>DesGlobar!</Text> : <Text>Globar!</Text>}
-                                        </TouchableOpacity>
-                                    )}
-                                </View>
-                            </View>
-
-                            <View
-                                style={{
-                                    flex: 1,
-                                    backgroundColor: '#ffffff',
-                                    borderRadius: 4,
-                                    padding: 15,
-                                    marginTop: 15,
-                                    marginLeft: 7.5,
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <TouchableOpacity
-                                    onPress={handleShare}
-                                    style={{
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                    }}
-                                >
-                                    <Icon name="share" size={24} color="#009DDB" style={{ marginRight: 5 }} />
-                                    <Text style={{ fontWeight: 'bold', color: '#009DDB' }}>Compartilhar</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-
-                        {myInteraction && (
-                            <>
-                                <View
-                                    style={{
-                                        flex: 1,
-                                        backgroundColor: '#ffffff',
-                                        borderRadius: 4,
-                                        padding: 15,
-                                        marginTop: 15,
-                                    }}
-                                >
-                                    <View
-                                        style={{
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
-                                            justifyContent: 'space-between',
-                                            marginBottom: 15,
-                                        }}
-                                    >
-                                        <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Avaliação</Text>
-                                        <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-                                            Nota média: {score || '-'}
-                                        </Text>
-                                    </View>
-                                    <View
-                                        style={{
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
-                                            justifyContent: 'space-between',
-                                        }}
-                                    >
-                                        <TouchableOpacity onPress={() => toggleStars(1)}>
-                                            <Icon
-                                                name="star-face"
-                                                size={36}
-                                                color="goldenrod"
-                                                style={myInteraction.score >= 1 ? styles.aliveStar : styles.deadStar}
-                                            />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => toggleStars(2)}>
-                                            <Icon
-                                                name="star-face"
-                                                size={36}
-                                                color="goldenrod"
-                                                style={myInteraction.score >= 2 ? styles.aliveStar : styles.deadStar}
-                                            />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => toggleStars(3)}>
-                                            <Icon
-                                                name="star-face"
-                                                size={36}
-                                                color="goldenrod"
-                                                style={myInteraction.score >= 3 ? styles.aliveStar : styles.deadStar}
-                                            />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => toggleStars(4)}>
-                                            <Icon
-                                                name="star-face"
-                                                size={36}
-                                                color="goldenrod"
-                                                style={myInteraction.score >= 4 ? styles.aliveStar : styles.deadStar}
-                                            />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => toggleStars(5)}>
-                                            <Icon
-                                                name="star-face"
-                                                size={36}
-                                                color="goldenrod"
-                                                style={myInteraction.score >= 5 ? styles.aliveStar : styles.deadStar}
-                                            />
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-
-                                <View
-                                    style={{
-                                        flex: 1,
-                                        backgroundColor: '#ffffff',
-                                        borderRadius: 4,
-                                        padding: 15,
-                                        marginTop: 15,
-                                    }}
-                                >
-                                    <TouchableOpacity
-                                        style={{
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            backgroundColor: '#009DDB',
-                                            padding: 15,
-                                            borderRadius: 4,
-                                        }}
-                                        onPress={() => navigation.navigate('EpisodioChat', { id: episodeInfo._id })}
-                                    >
-                                        <Icon name="chat" size={24} color="#ffffff" style={{ marginRight: 5 }} />
-                                        <Text style={{ fontWeight: 'bold', color: '#ffffff' }}>Entrar no chat</Text>
+                                    <TouchableOpacity onPress={() => toggleStars(1)}>
+                                        <Icon
+                                            name="star-face"
+                                            size={36}
+                                            color="goldenrod"
+                                            style={myInteraction.score >= 1 ? styles.aliveStar : styles.deadStar}
+                                        />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => toggleStars(2)}>
+                                        <Icon
+                                            name="star-face"
+                                            size={36}
+                                            color="goldenrod"
+                                            style={myInteraction.score >= 2 ? styles.aliveStar : styles.deadStar}
+                                        />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => toggleStars(3)}>
+                                        <Icon
+                                            name="star-face"
+                                            size={36}
+                                            color="goldenrod"
+                                            style={myInteraction.score >= 3 ? styles.aliveStar : styles.deadStar}
+                                        />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => toggleStars(4)}>
+                                        <Icon
+                                            name="star-face"
+                                            size={36}
+                                            color="goldenrod"
+                                            style={myInteraction.score >= 4 ? styles.aliveStar : styles.deadStar}
+                                        />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => toggleStars(5)}>
+                                        <Icon
+                                            name="star-face"
+                                            size={36}
+                                            color="goldenrod"
+                                            style={myInteraction.score >= 5 ? styles.aliveStar : styles.deadStar}
+                                        />
                                     </TouchableOpacity>
                                 </View>
-                            </>
-                        )}
-                    </>
-                )}
-            </ScrollView>
+                            </View>
+
+                            <TouchableOpacity
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    backgroundColor: '#009DDB',
+                                    padding: 15,
+                                    borderRadius: 4,
+                                    marginTop: 15,
+                                }}
+                                onPress={() => navigation.navigate('EpisodioChat', { id: episodeInfo._id })}
+                            >
+                                <Icon name="chat" size={24} color="#ffffff" style={{ marginRight: 5 }} />
+                                <Text style={{ fontWeight: 'bold', color: '#ffffff' }}>Entrar no chat</Text>
+                            </TouchableOpacity>
+                        </>
+                    )}
+                </ScrollView>
+            )}
         </LinearGradient>
     );
 };

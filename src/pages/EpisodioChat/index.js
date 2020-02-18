@@ -13,13 +13,17 @@ function formatDate(date) {
     return `${day}/${month}/${year}`;
 }
 
-const EpisodioChat = ({ route }) => {
+const EpisodioChat = ({ navigation, route }) => {
     const { socket } = useContext(AppContext);
 
     const [episodeInfo, setEpisodeInfo] = useState(null);
     const [userCount, setUserCount] = useState(0);
     const [chatHistory, setChatHistory] = useState([]);
     const [messageDraft, setMessageDraft] = useState('');
+
+    navigation.setOptions({
+        title: episodeInfo ? `Chat - ${episodeInfo.title}` : '',
+    });
 
     useEffect(() => {
         socket.emit('join', { episodeId: route.params.id });
@@ -93,7 +97,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 15,
-        paddingTop: 40,
+        paddingTop: 80,
     },
 });
 
