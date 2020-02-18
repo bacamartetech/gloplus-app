@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { StyleSheet, FlatList, TextInput, TouchableOpacity, Text, View, Image } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import formatRelative from 'date-fns/formatRelative';
+import { ptBR } from 'date-fns/locale';
 
 import AppContext from '../../contexts/AppContext';
 
@@ -46,11 +48,9 @@ const EpisodioChat = ({ navigation, route }) => {
     }, [chatHistory, route.params.id, socket]);
 
     const handleSendMessage = useCallback(() => {
-        const message = messageDraft;
-
         socket.emit('chatMessage', {
             episodeId: route.params.id,
-            message,
+            message: messageDraft,
         });
 
         setMessageDraft('');
@@ -61,13 +61,35 @@ const EpisodioChat = ({ navigation, route }) => {
             <FlatList
                 data={chatHistory}
                 keyExtractor={item => item._id}
-                style={{ marginTop: 15, marginBottom: -15 }}
+                style={{ marginBottom: 15 }}
+                contentContainerStyle={{ marginBottom: -15 }}
                 renderItem={({ item }) => (
-                    <View style={{ flexDirection: 'row' }}>
-                        {/* <Text>{item.date}</Text> */}
-                        {/* <Text>{item.user.name}</Text> */}
-                        <Image style={{ width: 40, height: 40 }} source={{ uri: item.user.avatar.url }} />
-                        {/* <Text>{item.message}</Text> */}
+                    <View style={{ marginBottom: 15 }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <Text style={{ fontWeight: 'bold', color: '#ffffff' }}>{item.user.name}</Text>
+                            <Text style={{ color: '#ffffff' }}>
+                                {formatRelative(new Date(item.date), new Date(), {
+                                    locale: ptBR,
+                                })}
+                            </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Image
+                                style={{ width: 40, height: 40, borderRadius: 4, marginRight: 15 }}
+                                source={{ uri: item.user.avatar.url }}
+                            />
+
+                            <View
+                                style={{
+                                    flex: 1,
+                                    backgroundColor: 'rgba(255, 255, 255, 0.75)',
+                                    borderRadius: 4,
+                                    padding: 15,
+                                }}
+                            >
+                                <Text>{item.message}</Text>
+                            </View>
+                        </View>
                     </View>
                 )}
             />
@@ -75,43 +97,12 @@ const EpisodioChat = ({ navigation, route }) => {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <TextInput
                     placeholder="Digite sua mensagem"
-                    style={{ flex: 1, backgroundColor: '#ffffff', borderRadius: 4, padding: 15 }}
+                    style={{ flex: 1, backgroundColor: '#ffffff', borderRadius: 4, padding: 15, paddingRight: 55 }}
                 />
-                <Icon name="send" size={24} />
+                <TouchableOpacity style={{ position: 'absolute', right: 15 }} onPress={handleSendMessage}>
+                    <Icon name="send" size={24} />
+                </TouchableOpacity>
             </View>
-            {/* {episodeInfo && (
-                <>
-                    <Icon name="account" />
-                    <Text>{userCount}</Text>
-                    <Text>
-                        {episodeInfo.date} - {episodeInfo.time}
-                    </Text>
-                    <Image style={{ width: 40, height: 40 }} source={{ uri: episodeInfo.logo }} />
-                    <Text>{episodeInfo.title}</Text>
-
-                    <TextInput
-                        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                        value={messageDraft}
-                        onChangeText={text => setMessageDraft(text)}
-                    />
-                    <TouchableOpacity onPress={handleSendMessage}>
-                        <Text>Enviar mensagem</Text>
-                    </TouchableOpacity>
-                    <FlatList
-                        data={chatHistory}
-                        keyExtractor={item => item._id}
-                        style={{ marginTop: 15, marginBottom: -15 }}
-                        renderItem={({ item }) => (
-                            <View style={{ flexDirection: 'row' }}>
-                                <Text>{item.date}</Text>
-                                <Text>{item.user.name}</Text>
-                                <Image style={{ width: 40, height: 40 }} source={{ uri: item.user.avatar.url }} />
-                                <Text>{item.message}</Text>
-                            </View>
-                        )}
-                    />
-                </>
-            )} */}
         </LinearGradient>
     );
 };

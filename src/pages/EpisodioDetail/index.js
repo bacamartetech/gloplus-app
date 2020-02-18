@@ -31,7 +31,6 @@ const EpisodeDetail = ({ navigation, route }) => {
         socket.emit('join', { episodeId: route.params.id });
 
         socket.on('episodeInfo', data => {
-            console.log(data);
             setEpisodeInfo({ ...data, date: formatDate(data.date) });
         });
 
