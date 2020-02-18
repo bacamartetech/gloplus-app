@@ -182,6 +182,7 @@ const EpisodeDetail = ({ navigation, route }) => {
                                 style={{
                                     flexDirection: 'row',
                                     alignItems: 'center',
+                                    justifyContent: 'center',
                                 }}
                             >
                                 <Icon name="share" size={24} color="#009DDB" style={{ marginRight: 5 }} />
