@@ -6,28 +6,15 @@ Glo+ React Native APP
 App to help people to interact online while watching TV Globo.
 
 ## Running the app
-
-### clone repository
+Install the dependencies.
 ```
-git clone https://github.com/bacamartetech/gloplus-app
+yarn
 ```
-
-### change directory
-```
-cd gloplus-app
-```
-
-### install the dependencies
-```
-yarn // or npm install
-```
-
-### run on Android
+Run on Android.
 ```
 yarn android
 ```
-
-### run on iOS (not tested but should work)
+Run on iOS (not tested but should work).
 ```
 yarn ios
 ```
