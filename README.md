@@ -6,15 +6,15 @@ Glo+ React Native APP
 App to help people to interact online while watching TV Globo.
 
 ## Running the app
-Install the dependencies.
+Install the dependencies:
 ```
 yarn
 ```
-Run on Android.
+Run on Android:
 ```
 yarn android
 ```
-Run on iOS (not tested but should work).
+Run on iOS (not tested but should work):
 ```
 yarn ios
 ```
