@@ -21,7 +21,7 @@ function getTodayValue() {
     const today = new Date();
     const year = today.getFullYear();
     const month = ('0' + (today.getMonth() + 1)).slice(-2);
-    const date = today.getDate();
+    const date = ('0' + today.getDate()).slice(-2);
 
     return Number(`${year}${month}${date}`);
 }
