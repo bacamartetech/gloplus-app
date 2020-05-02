@@ -1,4 +1,4 @@
-# Glo+ App
+# Glo+ APP
 
 Glo+ React Native APP
 
