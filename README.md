@@ -1,5 +1,7 @@
 # Glo+ App
 
+Glo+ React Native APP
+
 ## Description
 App to help people to interact online while watching TV Globo.
 
