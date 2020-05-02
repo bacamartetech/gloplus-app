@@ -5,9 +5,6 @@ Glo+ React Native APP
 ## Description
 App to help people to interact online while watching TV Globo.
 
-## Download
-https://github.com/bacamartetech/gloplus-api/raw/master/assets/gloplus.apk
-
 ## Running the app
 
 ### clone repository
