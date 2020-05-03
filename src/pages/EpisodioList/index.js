@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useIsFocused } from '@react-navigation/native';
 import { StyleSheet, Text, View, Picker, FlatList, TouchableOpacity, Dimensions } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -40,6 +41,8 @@ const EpisodioList = ({ route, navigation }) => {
     const [emissora, setEmissora] = useState({});
     const [episodios, setEpisodios] = useState([]);
     const [selectedDate, setSelectedDate] = useState(getTodayValue());
+
+    const isFocused = useIsFocused();
 
     navigation.setOptions({
         title: emissora.title ? emissora.title : '',
@@ -101,6 +104,10 @@ const EpisodioList = ({ route, navigation }) => {
     }, [fetchEpisodios, selectedDate]);
 
     const currentEpisode = useMemo(() => {
+        if (!isFocused) {
+            return;
+        }
+
         if (!emissora.dates || !episodios.length) {
             return;
         }
@@ -130,7 +137,7 @@ const EpisodioList = ({ route, navigation }) => {
         const pastEpisodes = episodios.filter(e => e.totalMinutes <= totalMinutes);
         _currentEpisode = pastEpisodes[pastEpisodes.length - 1];
         return _currentEpisode;
-    }, [emissora.dates, episodios, selectedDate, todayAdjusted]);
+    }, [emissora.dates, episodios, isFocused, selectedDate, todayAdjusted]);
 
     return (
         <LinearGradient colors={['#9bcbc9', '#616161']} style={styles.container}>
