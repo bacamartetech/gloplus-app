@@ -3,7 +3,7 @@ import axios from 'axios';
 import storage from './storage';
 
 const api = axios.create({
-    baseURL: 'http://10.0.2.2:3000',
+    baseURL: 'https://gloplus-api.glitch.me',
 });
 
 api.interceptors.request.use(
