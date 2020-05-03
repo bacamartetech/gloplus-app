@@ -28,6 +28,10 @@ const EpisodeDetail = ({ navigation, route }) => {
     });
 
     useEffect(() => {
+        return () => socket.emit('leave', { episodeId: route.params.id });
+    }, [route.params.id, socket]);
+
+    useEffect(() => {
         socket.emit('join', { episodeId: route.params.id });
 
         socket.on('episodeInfo', data => {

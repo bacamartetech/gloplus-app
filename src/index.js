@@ -34,7 +34,7 @@ const App = () => {
     useEffect(() => {
         if (appState.user) {
             const token = appState.user.token;
-            const newSocket = socketio('https://gloplus-api.glitch.me?token=' + token, {
+            const newSocket = socketio('http://10.0.2.2:3000?token=' + token, {
                 transportOptions: {
                     polling: {
                         extraHeaders: {
