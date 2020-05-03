@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Text, View, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, FlatList, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -7,12 +7,15 @@ import api from '../../services/api';
 
 const EmissoraList = ({ navigation }) => {
     const [emissoras, setEmissoras] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     navigation.setOptions({
         title: 'Selecione uma emissora',
     });
 
     useEffect(() => {
+        setLoading(true);
+
         api.fetchUserProfile()
             .then(responseProfile => {
                 const schedule = responseProfile.data.schedule;
@@ -27,7 +30,13 @@ const EmissoraList = ({ navigation }) => {
                     })
                     .catch(console.log);
             })
-            .catch(console.log);
+            .catch(err => {
+                console.log(err);
+                Alert.alert('Parece que estamos indisponíveis... tente novamente mais tarde. =(');
+            })
+            .then(() => {
+                setLoading(false);
+            });
     }, [navigation]);
 
     const handleSelectEmissora = useCallback(
@@ -41,7 +50,23 @@ const EmissoraList = ({ navigation }) => {
 
     return (
         <LinearGradient colors={['#9bcbc9', '#616161']} style={styles.container}>
-            {/* <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#ffffff' }}>Selecione a emissora</Text> */}
+            {loading && (
+                <>
+                    <Text
+                        style={{
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                            color: '#ffffff',
+                            textAlign: 'center',
+                            marginTop: 50,
+                            marginBottom: 10,
+                        }}
+                    >
+                        Carregando
+                    </Text>
+                    <ActivityIndicator />
+                </>
+            )}
             <FlatList
                 data={emissoras}
                 keyExtractor={item => item._id}
