@@ -1,7 +1,8 @@
 # Glo+ APP
 Glo+ React Native APP
-
-![Screenshot](/.github/mobile_video_small.gif)
+<p align="center">
+  <img src="/.github/mobile_video.gif" width="300">
+</p>
 
 ## Description
 App to help people to interact online while watching TV Globo.
