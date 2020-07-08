@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useIsFocused } from '@react-navigation/native';
-import { StyleSheet, Text, View, Picker, FlatList, TouchableOpacity, Dimensions } from 'react-native';
+import {
+    StyleSheet,
+    Text,
+    View,
+    Picker,
+    FlatList,
+    TouchableOpacity,
+    Dimensions,
+    ActivityIndicator,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { subDays } from 'date-fns';
@@ -37,6 +46,7 @@ function getDateValue(today) {
 }
 
 const EpisodioList = ({ route, navigation }) => {
+    const [loadingEpisodios, setLoadingEpisodios] = useState(true);
     const [todayAdjusted, setTodayAdjusted] = useState(false);
     const [emissora, setEmissora] = useState({});
     const [episodios, setEpisodios] = useState([]);
@@ -78,6 +88,12 @@ const EpisodioList = ({ route, navigation }) => {
         date => {
             api.fetchEpisodios(route.params.idEmissora, date || selectedDate)
                 .then(response => {
+                    if (!response.data || !response.data.length) {
+                        setEpisodios([]);
+                        setLoadingEpisodios(false);
+                        return;
+                    }
+
                     const episodiosData = response.data.map(e => ({
                         ...e,
                         totalMinutes: Number(e.time.slice(0, 2)) * 60 + Number(e.time.slice(3, 5)),
@@ -93,6 +109,7 @@ const EpisodioList = ({ route, navigation }) => {
                         });
 
                     setEpisodios(episodiosData);
+                    setLoadingEpisodios(false);
                 })
                 .catch(console.log);
         },
@@ -138,6 +155,40 @@ const EpisodioList = ({ route, navigation }) => {
         _currentEpisode = pastEpisodes[pastEpisodes.length - 1];
         return _currentEpisode;
     }, [emissora.dates, episodios, isFocused, selectedDate, todayAdjusted]);
+
+    if (loadingEpisodios) {
+        return (
+            <LinearGradient colors={['#9bcbc9', '#616161']} style={styles.container}>
+                <View style={{ flex: 1 }}>
+                    <Text
+                        style={{
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                            color: '#ffffff',
+                            textAlign: 'center',
+                            marginTop: 50,
+                            marginBottom: 10,
+                        }}
+                    >
+                        Carregando
+                    </Text>
+                    <ActivityIndicator />
+                </View>
+            </LinearGradient>
+        );
+    }
+
+    if (!loadingEpisodios && !episodios.length) {
+        return (
+            <LinearGradient colors={['#9bcbc9', '#616161']} style={styles.container}>
+                <View style={{ flex: 1 }}>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#ffffff', marginVertical: 15 }}>
+                        Nenhum dado de programação foi encontrado.
+                    </Text>
+                </View>
+            </LinearGradient>
+        );
+    }
 
     return (
         <LinearGradient colors={['#9bcbc9', '#616161']} style={styles.container}>
